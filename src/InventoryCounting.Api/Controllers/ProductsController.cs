@@ -16,7 +16,7 @@ public class ProductsController : ControllerBase
         _context = context;
     }
 
-    [HttpGet]
+    [HttpGet] 
     public async Task<ActionResult<IEnumerable<Product>>> GetProducts()
     {
         var products = await _context.Products

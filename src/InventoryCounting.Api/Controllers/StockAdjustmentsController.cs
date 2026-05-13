@@ -12,7 +12,7 @@ public class StockAdjustmentsController : ControllerBase
     private readonly AppDbContext _context;
 
     public StockAdjustmentsController(AppDbContext context)
-    {
+    { 
         _context = context;
     }
 

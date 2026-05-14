@@ -22,6 +22,8 @@ public class AppDbContext : DbContext
 
     public DbSet<StockAdjustment> StockAdjustments { get; set; }
 
+    public DbSet<AuditLog> AuditLogs { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
@@ -170,6 +172,36 @@ public class AppDbContext : DbContext
                 .WithMany()
                 .HasForeignKey(stockAdjustment => stockAdjustment.WarehouseId)
                 .OnDelete(DeleteBehavior.Restrict);
+        });
+
+        modelBuilder.Entity<AuditLog>(entity =>
+        {
+            entity.HasKey(auditLog => auditLog.Id);
+
+            entity.Property(auditLog => auditLog.Action)
+                .IsRequired()
+                .HasMaxLength(150);
+
+            entity.Property(auditLog => auditLog.EntityName)
+                .IsRequired()
+                .HasMaxLength(150);
+
+            entity.Property(auditLog => auditLog.EntityId)
+                .IsRequired()
+                .HasMaxLength(100);
+
+            entity.Property(auditLog => auditLog.OldValue)
+                .HasMaxLength(1000);
+
+            entity.Property(auditLog => auditLog.NewValue)
+                .HasMaxLength(1000);
+
+            entity.Property(auditLog => auditLog.CreatedBy)
+                .IsRequired()
+                .HasMaxLength(150);
+
+            entity.Property(auditLog => auditLog.CreatedAt)
+                .IsRequired();
         });
     }
 }

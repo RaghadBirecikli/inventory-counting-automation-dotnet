@@ -116,6 +116,19 @@ public class StockCountSessionsController : ControllerBase
         _context.StockCountSessions.Add(session);
         await _context.SaveChangesAsync();
 
+        _context.AuditLogs.Add(new AuditLog
+        {
+            Action = "StockCountSessionCreated",
+            EntityName = "StockCountSession",
+            EntityId = session.Id.ToString(),
+            OldValue = null,
+            NewValue = $"SessionNumber: {session.SessionNumber}, WarehouseId: {session.WarehouseId}, Status: {session.Status}",
+            CreatedBy = request.CreatedBy,
+            CreatedAt = DateTime.UtcNow
+        });
+
+        await _context.SaveChangesAsync();
+
         var response = new StockCountSessionResponse
         {
             Id = session.Id,
@@ -277,11 +290,33 @@ public class StockCountSessionsController : ControllerBase
                 ApprovedAt = approvedAt
             });
 
+            _context.AuditLogs.Add(new AuditLog
+            {
+                Action = "StockBalanceUpdated",
+                EntityName = "StockBalance",
+                EntityId = stockBalance.Id.ToString(),
+                OldValue = $"Quantity: {oldQuantity}",
+                NewValue = $"Quantity: {newQuantity}",
+                CreatedBy = request.ApprovedBy,
+                CreatedAt = approvedAt
+            });
+
             adjustmentsCreated++;
         }
 
         session.Status = StockCountStatus.Approved;
         session.CompletedAt = approvedAt;
+
+        _context.AuditLogs.Add(new AuditLog
+        {
+            Action = "StockCountSessionApproved",
+            EntityName = "StockCountSession",
+            EntityId = session.Id.ToString(),
+            OldValue = "Status: Uploaded",
+            NewValue = $"Status: Approved, AdjustmentsCreated: {adjustmentsCreated}",
+            CreatedBy = request.ApprovedBy,
+            CreatedAt = approvedAt
+        });
 
         await _context.SaveChangesAsync();
         await transaction.CommitAsync();
@@ -409,6 +444,17 @@ public class StockCountSessionsController : ControllerBase
         _context.StockCountLines.AddRange(newLines);
 
         session.Status = StockCountStatus.Uploaded;
+
+        _context.AuditLogs.Add(new AuditLog
+        {
+            Action = "ExcelUploaded",
+            EntityName = "StockCountSession",
+            EntityId = session.Id.ToString(),
+            OldValue = "Status: Draft",
+            NewValue = $"Status: Uploaded, LinesCount: {newLines.Count}",
+            CreatedBy = session.CreatedBy,
+            CreatedAt = DateTime.UtcNow
+        });
 
         await _context.SaveChangesAsync();
 

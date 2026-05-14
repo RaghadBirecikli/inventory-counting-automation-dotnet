@@ -460,22 +460,6 @@ Swagger is available at:
 https://localhost:{port}/swagger
 ```
 
-## Demo Screenshots
-
-Screenshots can be added under `docs/images/`.
-
-![Swagger](docs/images/swagger.png)
-
-![Stock Balances](docs/images/stock-balances.png)
-
-![Upload Excel](docs/images/upload-excel.png)
-
-![Variance Report](docs/images/variance-report.png)
-
-![Stock Adjustments](docs/images/stock-adjustments.png)
-
-![Audit Logs](docs/images/audit-logs.png)
-
 ## Future Improvements
 
 * JWT authentication

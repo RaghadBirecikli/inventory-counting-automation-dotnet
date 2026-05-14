@@ -1,6 +1,3 @@
-أكيد، هذا النص الكامل المعدّل للـ `README.md` بعد إضافة **v1.1.0 - Audit Logs**. اعتمدي هذا بدل النص الحالي. النسخة الحالية عندك كانت v1.0.0 وبدون AuditLogs في الجداول والـ endpoints، فعدلتها لتطابق التحديث الجديد. 
-
-````markdown
 # Inventory Counting Automation System
 
 **Repository:** `inventory-counting-automation-dotnet`  
